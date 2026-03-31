@@ -3,7 +3,9 @@ package me.docs.stopwachthgh;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private Button stopButton;
     private Button resetButton;
     private Button zapiszButton;
+    private ListView listView;
 
     private boolean czyDziala = false;
+
+    ArrayList<String> arrayListCzasy = new ArrayList<>();
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         stopButton = findViewById(R.id.btnStop);
         resetButton = findViewById(R.id.btnReset);
         zapiszButton = findViewById(R.id.btnZapisz);
+        listView = findViewById(R.id.listView);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayListCzasy);
+        listView.setAdapter(arrayAdapter);
 
         Handler handler = new Handler();
         handler.post(new Runnable() {
@@ -68,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 czyDziala = false;
+                sekundy = 0;
+                textView.setText(wyswietlCzas(0));
+            }
+        });
+        zapiszButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                czyDziala = false;
+                arrayListCzasy.add(wyswietlCzas(sekundy));
+                arrayAdapter.notifyDataSetChanged();
                 sekundy = 0;
                 textView.setText(wyswietlCzas(0));
             }
